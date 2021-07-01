@@ -10,11 +10,13 @@
     <div class="row">
         <div class="col-6">
             <h2 class="text-primary">Change Profile Photo</h2>
+            <p>Upload 5 images to see the magic!</p>
         </div>
 
         <div class="col-4 text-right">
             @if (photoPath != null)
             {
+                <h3><b><i>Server Side Validation</i></b></h3>
                 <img src="@photoPath" class="rounded-circle img-fluid" asp-append-version="true" />
             }
         </div>
@@ -52,10 +54,12 @@
         </div>
 
 
-        <div class="form-group row">
-            <button type="submit" class="btn btn-primary mb-3" id="btnSubmit">
-                <i class="fas fa-upload"></i>&nbsp; Upload
-            </button>
+        <div class="col-sm-10">
+            <div class="form-group row">
+                <button type="submit" class="btn btn-primary mb-3" id="btnSubmit">
+                    <i class="fas fa-upload"></i>&nbsp; Upload
+                </button>
+            </div>
         </div>
     </form>
 </div>

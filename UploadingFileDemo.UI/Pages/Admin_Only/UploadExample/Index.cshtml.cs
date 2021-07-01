@@ -1,13 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using UploadingFileDemo.UI.Data.Access.IRepository;
 using UploadingFileDemo.UI.Models;
@@ -19,7 +15,7 @@ namespace UploadingFileDemo.UI.Pages.Admin_Only.UploadExample
         private readonly IWebHostEnvironment _hostingEnvirnment;
         private readonly IUnitOfWork _unitOfWork;
         //private const long ImageMaxSizeUpload = 1024;
-        private const long ImageMaxSizeUpload = 1000000;
+        private const long ImageMaxSizeUpload = 100000;
         [BindProperty]
         public UploadImage UploadImage { get; set; }
         public IndexModel(IWebHostEnvironment hostingEnvironment, IUnitOfWork unitOfWork)
@@ -75,7 +71,7 @@ namespace UploadingFileDemo.UI.Pages.Admin_Only.UploadExample
                                 _unitOfWork.UploadImage.Add(UploadImage);
                                 _unitOfWork.Save();
                                 TempData["success"] = "Upload successful!";
-                                return RedirectToPage("./Admin_Only/UploadExample/Index");
+                                return RedirectToPage("/Admin_Only/UploadExample/Index");
                             }
                             else
                             {
@@ -87,7 +83,7 @@ namespace UploadingFileDemo.UI.Pages.Admin_Only.UploadExample
 
                             _unitOfWork.UploadImage.Update(UploadImage);
                             TempData["update"] = "Image updated successful!";
-                            return RedirectToPage("./Admin_Only/UploadExample/Index");
+                            return RedirectToPage("/Admin_Only/UploadExample/Index");
 
                         }
 
@@ -98,7 +94,7 @@ namespace UploadingFileDemo.UI.Pages.Admin_Only.UploadExample
                         ModelState.AddModelError(string.Empty, "The file is to large.");
                         if (!ModelState.IsValid)
                         {
-                            TempData["fileSizeLarge"] = "The file is to large. The size of the image should be not less than 1MB.";
+                            TempData["fileSizeLarge"] = "The file is too large. The size of the image should be not less than 1MB.";
                             UploadImage = new();
                             return Page();
                         }

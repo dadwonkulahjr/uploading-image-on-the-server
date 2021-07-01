@@ -16,7 +16,7 @@ function validateInput() {
             else {
                 swal({
                     title: 'Error',
-                    text: 'The file is to large. The size of the image should be not less than 1MB.',
+                    text: 'The file is too large. The size of the image should be not less than 1MB.',
                     icon: 'error'
                 });
                 return false;

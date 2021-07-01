@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,14 +14,12 @@ namespace UploadingFileDemo.UI.Pages.Admin_Only.UploadExample
         private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _hostingEnvirnment;
         private Random _random = new();
-
         public UploadImage UploadImage { get; set; } = new();
         public UploadUsingJqueryModel(IUnitOfWork unitOfWork, IWebHostEnvironment hostEnvironment)
         {
             _unitOfWork = unitOfWork;
             _hostingEnvirnment = hostEnvironment;
         }
-
         public IActionResult OnGet(int? id)
         {
             if (id == null)
@@ -45,7 +40,6 @@ namespace UploadingFileDemo.UI.Pages.Admin_Only.UploadExample
 
             return Page();
         }
-
         public IActionResult OnPost()
         {
             string webRootPath = _hostingEnvirnment.WebRootPath;
@@ -55,34 +49,32 @@ namespace UploadingFileDemo.UI.Pages.Admin_Only.UploadExample
             {
                 if (UploadImage.Id == 0)
                 {
-                    string newGuid = Guid.NewGuid().ToString();
-                    string upload = Path.Combine(webRootPath, @"images\iamtuse_upload");
-                    string extention = Path.GetExtension(files[0].FileName);
-                    string fileName = files[0].FileName;
-                    string combine = fileName + "__" + newGuid + extention;
-
-                    using (var fileStream = new FileStream(Path.Combine(upload, combine), FileMode.Create))
+                    if (UploadImage.Image == null)
                     {
-                        files[0].CopyTo(fileStream);
+                        UploadImage.Image = ProcessUploadedFile();
+                        _unitOfWork.UploadImage.Add(UploadImage);
+                        _unitOfWork.Save();
+                        return RedirectToPage("/Admin_Only/UploadExample/UploadUsingJquery");
                     }
-
-                    UploadImage.Image = ProcessUploadedFile();
-                    _unitOfWork.UploadImage.Add(UploadImage);
-                    _unitOfWork.Save();
-                    return RedirectToPage("./Admin_Only/UploadExample/Index");
+                    else
+                    {
+                        _unitOfWork.UploadImage.Update(UploadImage);
+                        return RedirectToPage("/Admin_Only/UploadExample/UploadUsingJquery");
+                    }
                 }
                 else
                 {
-
+                    _unitOfWork.UploadImage.Update(UploadImage);
+                    return RedirectToPage("/Admin_Only/UploadExample/UploadUsingJquery");
                 }
+              
+            }
+            else
+            {
                 return Page();
             }
-           
 
-
-            return Page();
         }
-
         private string ProcessUploadedFile()
         {
             string uniqueFileName = null;
