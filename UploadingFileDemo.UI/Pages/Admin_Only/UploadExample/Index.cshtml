@@ -1,0 +1,69 @@
+﻿@page
+@model UploadingFileDemo.UI.Pages.Admin_Only.UploadExample.IndexModel
+@{
+    var photoPath = "~/images/iamtuse_upload/" + (Model.UploadImage.Image ?? "jjc.jpg");
+    ViewData["Title"] = "Upload File Example";
+}
+
+
+<div class="border backgroundWhite container shadow">
+    <div class="row">
+        <div class="col-6">
+            <h2 class="text-primary">Change Profile Photo</h2>
+        </div>
+
+        <div class="col-4 text-right">
+            @if (photoPath != null)
+            {
+                <img src="@photoPath" class="rounded-circle img-fluid" asp-append-version="true" />
+            }
+        </div>
+
+    </div>
+    <br /><br />
+    <form method="post" enctype="multipart/form-data">
+        @*<input asp-for="UploadImage.Id" hidden="hidden" />*@
+        <div class="form-group row">
+            <label asp-for="Photo" class="col-form-label col-md-2"></label>
+            <div class="col-sm-10">
+                <div class="custom-file">
+                    <input asp-for="Photo" class="form-control custom-file-input" />
+                    <label class="custom-file-label">Choose File...</label>
+                    <span class="text-danger" asp-validation-for="Photo"></span>
+                    @if (TempData["invalidFileExtention"] != null)
+                    {
+                        <span class="text-danger">@TempData["invalidFileExtention"]</span>
+                    }
+                    @if (TempData["fileSizeLarge"] != null)
+                    {
+                        <span class="text-danger">@TempData["fileSizeLarge"]</span>
+                    }
+                    @if (TempData["success"] != null)
+                    {
+                        <span class="text-success">@TempData["success"]</span>
+                    }
+                    @if (TempData["update"] != null)
+                    {
+                        <span class="text-success">@TempData["update"]</span>
+                    }
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="form-group row">
+            <button type="submit" class="btn btn-primary mb-3" id="btnSubmit">
+                <i class="fas fa-upload"></i>&nbsp; Upload
+            </button>
+        </div>
+    </form>
+</div>
+
+
+@section Scripts{
+    @*Very important for client side validation!*@
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/imageUpload.js"></script>
+
+}
